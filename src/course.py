@@ -7,6 +7,7 @@ class Course:
     self.numStudents = numStudents
     self.constraints = []
     self.countConflict = slots
+    self.availableSlots = []
 
 
   def __str__(self):
