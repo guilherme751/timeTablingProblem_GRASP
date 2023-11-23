@@ -59,13 +59,13 @@ def readInstance(path):
     f.readline()
     
     
-    
+    for course in courses:
+        course.availableSlots = [(i, j) for i in range(numRooms) for j in range(numPeriods)]
 
     for i in range(numConstraints):
         c = f.readline().split(' ')
         period_unavailable = int(c[1]) * periodsPerDay + int(c[2])
         course = getCourse(courses, c[0])
-        course.availableSlots = [(i, j) for i in range(numRooms) for j in range(numPeriods)]
         
         course.constraints.append(period_unavailable)
         course.countConflict -= numRooms

@@ -8,6 +8,9 @@ class Course:
     self.constraints = []
     self.countConflict = slots
     self.availableSlots = []
+    self.daysAlocated = set()  
+    self.roomsAlocated = set() 
+    
 
 
   def __str__(self):
