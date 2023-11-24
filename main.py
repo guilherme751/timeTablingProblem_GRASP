@@ -6,10 +6,5 @@ import copy
 
 instance = readInstance('data/toy.ctt')
 
-biuldInicialSolution(instance=instance)
-
-
-
-
-
+biuldInicialSolution(instance=instance, alpha=0.2)
 
