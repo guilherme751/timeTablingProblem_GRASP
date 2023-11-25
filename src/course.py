@@ -1,5 +1,5 @@
 class Course:
-  def __init__(self, name, teacher, weekFrequency, minOfDays, numStudents, slots):
+  def __init__(self, name = "vazio", teacher= "vazio", weekFrequency = 0, minOfDays = 0, numStudents = 0, slots = 0):
     self.name = name
     self.teacher = teacher
     self.weekFrequency = weekFrequency
