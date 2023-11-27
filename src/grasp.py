@@ -87,10 +87,7 @@ def updateUnavailable(a, r, p, table, listNotAlocated):
                     c.countConflict -= 1  
 
 def explodeSolution(a, instance, listnotAlocated):
-    
-    #primeiro passo: escolher um horário viável para colocar a
     slots = []
-   
     
     for p in range(instance.periods):
         if p in a.constraints:
@@ -111,18 +108,12 @@ def explodeSolution(a, instance, listnotAlocated):
                     flag = 1
             if flag == 0:
                 slots.append((r, p))
-
-    if len(slots) == 0:
-        print("a")
+    if len(slots) == 0:       
         return []
 
-
-    slotChose = random.choice(slots)
+    slotChose = random.choice(slots)    
     
-    
-    
-    aux = instance.timeTable[slotChose[0]][slotChose[1]]
-    
+    aux = instance.timeTable[slotChose[0]][slotChose[1]]    
     aux.classesAlocated -= 1
     instance.timeTable[slotChose[0]][slotChose[1]] = None
 
@@ -134,7 +125,7 @@ def explodeSolution(a, instance, listnotAlocated):
                 break
     if flag == 0:
         aux.daysAlocated.remove(int(slotChose[1]/instance.periods_per_day))
-    # for p in range()
+   
     flag = 0
     for p in range(instance.periods):
         if instance.timeTable[slotChose[0]][p] == aux:
@@ -143,8 +134,7 @@ def explodeSolution(a, instance, listnotAlocated):
     if flag == 0:
         aux.roomsAlocated.remove(slotChose[0])
 
-    listnotAlocated.append(aux)
-    
+    listnotAlocated.append(aux)    
 
     for c in listnotAlocated:
         if c == aux:
@@ -176,38 +166,23 @@ def explodeSolution(a, instance, listnotAlocated):
 
                     
 def biuldInicialSolution(instance, alpha, seed):
-   
-    #random.seed(seed)
     
     listnotAlocated = generateNotAlocatedList(instance.courses)
     listnotAlocated.sort(key = lambda x: x.countConflict)
-
-
    
     while len(listnotAlocated) > 0:
-        a = listnotAlocated[0] 
-
+        a = listnotAlocated[0]          
+        h = a.availableSlots      
         
-        
-        #print(a.name)     
-        h = a.availableSlots
-       
-        
-        if len(h) == 0:
-            #print_table(instance.timeTable)
+        if len(h) == 0:         
             h = explodeSolution(a, instance, listnotAlocated) 
             if len(h) == 0:
-                return None
-                
-
-       
-            
+                return None         
+                 
         allCosts = []
         for (r, p) in h:
             x = cost(instance, a, r, p, p/instance.periods_per_day, instance.rooms)
-
-            allCosts.append((r, p, x))
-           
+            allCosts.append((r, p, x))          
             
         cmin = min(allCosts, key=lambda x: x[2])[2]
         cmax = max(allCosts, key=lambda x: x[2])[2]
@@ -216,15 +191,15 @@ def biuldInicialSolution(instance, alpha, seed):
         for (r, p, x) in allCosts:            
             if x >= cmin and x <= cmin + alpha*(cmax - cmin):               
                 rcl.append((r, p , x))
-        (r, p, x) = random.choice(rcl)
-        #print((r,p,x)) 
+        (r, p, x) = random.choice(rcl)        
              
         instance.timeTable[r][p] = a
+
+
         a.daysAlocated.add(int(p/instance.periods_per_day))
         a.roomsAlocated.add(r)
         a.classesAlocated += 1
-        listnotAlocated.remove(a)
-        
+        listnotAlocated.remove(a)        
 
         updateUnavailable(a, r, p, instance.timeTable, instance.courses)
 
@@ -245,7 +220,7 @@ def swap_move(S, pos1, pos2):
     return new_S
     
 
-def getNeighboor(S, pos1, pos2, instance):
+def getNeighbor(S, pos1, pos2, instance):
     #print(pos1, pos2)
     if S[pos1[0]][pos1[1]] == None and S[pos2[0]][pos2[1]] == None:        
         return None
@@ -256,7 +231,7 @@ def getNeighboor(S, pos1, pos2, instance):
         None
 
 
-def generateNeighboors(S, i, instance):
+def generateNeighbor(S, i, instance):
     slots = instance.periods * instance.numRooms
 
     a = int(i/slots)
@@ -271,7 +246,7 @@ def generateNeighboors(S, i, instance):
     if (r,p) == (room, period):
         return None
 
-    new_S = getNeighboor(S, (r, p), (room, period), instance)
+    new_S = getNeighbor(S, (r, p), (room, period), instance)
 
     
     return new_S
@@ -285,7 +260,7 @@ def localSearch(S, best_f, instance):
     i = 0
     best_S = S
     while i < (instance.periods*instance.numRooms) * (instance.periods*instance.numRooms) /2:
-        new_S = generateNeighboors(S, i, instance)
+        new_S = generateNeighbor(S, i, instance)
         i += 1
         if new_S == None:
             continue

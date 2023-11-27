@@ -5,9 +5,9 @@ from src.grasp import *
 from src.util import *
 
 #ENTRADAS:
-maxItr = 100
-alpha = 0.2
-path = "data/comp01.ctt"
+maxItr = 1
+alpha = 0.1
+path = "data/comp03.ctt"
 
 
 f_out = open("output/" + "out_" + path.split("/")[1], "w")
@@ -29,9 +29,10 @@ for i in range(maxItr):
         instance.resetTable()
         resetCourses(instance.courses)
         continue
-    #print("custo solução gerada: ", f(S, instance))
+    
 
     S, f_now = localSearch(S, f(S, instance), instance)
+
     if i == 0:
         best_S = S
         best_f = f_now
@@ -39,6 +40,7 @@ for i in range(maxItr):
         if f_now < best_f:
             best_S = S
             best_f = f_now
+
     instance.resetTable()
         
     f_out.write(str(best_f) + "\n") 
