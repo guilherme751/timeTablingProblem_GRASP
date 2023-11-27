@@ -2,7 +2,7 @@ from src.instance import *
 from src.course import *
 import copy
 import random
-from src.util import print_table
+from src.util import print_table, feasibleSolution, f
 
 def sameCurriculum(c1, c2):   
   
@@ -228,8 +228,80 @@ def biuldInicialSolution(instance, alpha, seed):
 
         updateUnavailable(a, r, p, instance.timeTable, instance.courses)
 
-       
     return instance.timeTable
+
+def getCopy(S):
+    new_S = []
+    for r in S:
+        new_S.append(r.copy())
+    return new_S
+
+
+def swap_move(S, pos1, pos2):
+    new_S = getCopy(S)
+    aux = S[pos1[0]][pos1[1]]
+    new_S[pos1[0]][pos1[1]] = S[pos2[0]][pos2[1]]
+    new_S[pos2[0]][pos2[1]] = aux
+    return new_S
+    
+
+def getNeighboor(S, pos1, pos2, instance):
+    #print(pos1, pos2)
+    if S[pos1[0]][pos1[1]] == None and S[pos2[0]][pos2[1]] == None:        
+        return None
+    new_S = swap_move(S, pos1, pos2)
+    if feasibleSolution(instance, new_S):
+        return new_S
+    else:
+        None
+
+
+def generateNeighboors(S, i, instance):
+    slots = instance.periods * instance.numRooms
+
+    a = int(i/slots)
+
+    r = int(a/instance.periods)
+
+    p = int(a%instance.periods)   
+
+    room = int((i%slots)/instance.periods)
+    period = int((i%slots)%instance.periods)
+
+    if (r,p) == (room, period):
+        return None
+
+    new_S = getNeighboor(S, (r, p), (room, period), instance)
+
+    
+    return new_S
+    
+
+    
+
+
+
+def localSearch(S, best_f, instance):
+    i = 0
+    best_S = S
+    while i < (instance.periods*instance.numRooms) * (instance.periods*instance.numRooms) /2:
+        new_S = generateNeighboors(S, i, instance)
+        i += 1
+        if new_S == None:
+            continue
+        new_f = f(new_S, instance)
+        if new_f < best_f:
+            best_f = new_f
+            best_S = new_S
+            i = 0
+            
+    return best_S, best_f
+
+
+
+    
+
+
             
         
         

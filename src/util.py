@@ -53,7 +53,8 @@ def print_table(S):
 def feasibleSolution(instance, S):
    
     for c in instance.courses:
-        if (c.classesAlocated == c.weekFrequency) == False:                                 
+        if (c.classesAlocated == c.weekFrequency) == False:  
+            print("aqui")                               
             return False
 
     for p in range(instance.periods):
@@ -65,8 +66,7 @@ def feasibleSolution(instance, S):
                 cont += 1
                 teachers.add(S[r][p].teacher)
                 for cur in S[r][p].curriculum:
-                    if cur in curriculos: 
-                        print("aqui1")                        
+                    if cur in curriculos:                                                 
                         return False
                     curriculos.append(cur)
             if cont != len(teachers):                
