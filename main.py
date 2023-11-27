@@ -5,9 +5,9 @@ from src.grasp import *
 from src.util import *
 
 #ENTRADAS:
-maxItr = 1
+maxItr = 5
 alpha = 0.1
-path = "data/comp03.ctt"
+path = "data/comp01.ctt"
 
 
 f_out = open("output/" + "out_" + path.split("/")[1], "w")
@@ -15,7 +15,7 @@ f_out = open("output/" + "out_" + path.split("/")[1], "w")
 
 
 instance = readInstance(path)
-f_out.write(instance.name)
+f_out.write(instance.name + "alpha = " + str(alpha) + "\n")
 
 
 
