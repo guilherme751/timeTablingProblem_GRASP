@@ -3,7 +3,7 @@ from src.instance import Instance
 
 
 def getCourse(courses, name):
-  for c in courses:
+  for c in courses:    
     if c.name == name:
       return c
   return None
@@ -25,7 +25,9 @@ def readInstance(path):
     courses = []
     for i in range(numCourses):
         c = f.readline().split(' ')
-        courses.append(Course(c[0], c[1], int(c[2]), int(c[3]), int(c[4]), numPeriods*numRooms))
+        course = Course(c[0], c[1], int(c[2]), int(c[3]), int(c[4]), numPeriods*numRooms)
+        course.availableSlots_init = [(i, j) for i in range(numRooms) for j in range(numPeriods)]
+        courses.append(course)
         
 
     f.readline()
@@ -33,7 +35,7 @@ def readInstance(path):
 
     rooms = []
 
-    for i in range(numRooms):
+    for _ in range(numRooms):
         r = f.readline().split(' ')
         name = r[0]
         capacity = int(r[1])
@@ -44,25 +46,27 @@ def readInstance(path):
     f.readline()
 
     curricula = []
-
-    for i in range(numCurricula):
+    
+    for _ in range(numCurricula):
         c = f.readline().split(' ')
         name = c[0]
         size = int(c[1])
         courses_in_Curriculum = []
-        for j in range(size):           
-            courses_in_Curriculum.append(getCourse(courses, name=c[j+2]))
+        
+        for j in range(size):     
+            aux = getCourse(courses, name=c[j+2].strip()) 
+            aux.curriculum.add(name)           
+            courses_in_Curriculum.append(aux)
 
         curricula.append((name, courses_in_Curriculum))
-
+    
     f.readline()
     f.readline()
     
     
-    for course in courses:
-        course.availableSlots = [(i, j) for i in range(numRooms) for j in range(numPeriods)]
 
-    for i in range(numConstraints):
+
+    for _ in range(numConstraints):
         c = f.readline().split(' ')
         period_unavailable = int(c[1]) * periodsPerDay + int(c[2])
         course = getCourse(courses, c[0])
@@ -72,8 +76,10 @@ def readInstance(path):
         slotsRemove = [(i, period_unavailable) for i in range(numRooms)]
         
         for s in slotsRemove:
-            course.availableSlots.remove(s)
-        
+            course.availableSlots_init.remove(s)
+
+    for c in courses:
+       c.availableSlots = c.availableSlots_init.copy()   
 
     f.close()
 
