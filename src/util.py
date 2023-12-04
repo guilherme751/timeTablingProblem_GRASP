@@ -77,3 +77,14 @@ def feasibleSolution(instance, S):
 def resetCourses(courses):
     for c in courses:
         c.resetCourse()
+
+
+def outputBestSolution(instance, path, best_S):
+    
+    f = open("validate/" + path.split("/")[1].split(".")[0] + ".txt", "w")
+    for p in range(instance.periods):
+        for r in range(instance.numRooms):
+            
+            c = best_S[r][p]
+            if c != None:
+                f.write(c.name + " " + instance.rooms[r][0] + " " + str(int(p/instance.periods_per_day)) + " " + str(p%instance.periods_per_day) + "\n")

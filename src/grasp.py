@@ -3,6 +3,9 @@ from src.course import *
 import copy
 import random
 from src.util import print_table, feasibleSolution, f
+import time
+
+benchMark = 240
 
 def sameCurriculum(c1, c2):   
   
@@ -165,12 +168,15 @@ def explodeSolution(a, instance, listnotAlocated):
 
 
                     
-def biuldInicialSolution(instance, alpha, seed):
+def biuldInicialSolution(instance, alpha, seed, startItr, startTime):
     
     listnotAlocated = generateNotAlocatedList(instance.courses)
     listnotAlocated.sort(key = lambda x: x.countConflict)
    
     while len(listnotAlocated) > 0:
+        if time.time() - startItr > 10 or time.time() - startTime > benchMark:            
+            return None
+      
         a = listnotAlocated[0]          
         h = a.availableSlots      
         
@@ -231,36 +237,34 @@ def getNeighbor(S, pos1, pos2, instance):
         None
 
 
-def generateNeighbor(S, i, instance):
-    slots = instance.periods * instance.numRooms
+def generateNeighbor(S, i, instance):    
 
-    a = int(i/slots)
+    r = random.randrange(instance.numRooms)
+    room = random.randrange(instance.numRooms)
+    p = random.randrange(instance.periods)
+    period = random.randrange(instance.periods)
 
-    r = int(a/instance.periods)
 
-    p = int(a%instance.periods)   
 
-    room = int((i%slots)/instance.periods)
-    period = int((i%slots)%instance.periods)
 
     if (r,p) == (room, period):
         return None
+    
 
     new_S = getNeighbor(S, (r, p), (room, period), instance)
 
     
-    return new_S
-    
-
-    
+    return new_S   
 
 
 
-def localSearch(S, best_f, instance):
+def localSearch(S, best_f, instance,  startTime, k = 1):
     i = 0
     best_S = S
-    while i < (instance.periods*instance.numRooms) * (instance.periods*instance.numRooms) /2:
-        new_S = generateNeighbor(S, i, instance)
+    while i < (instance.periods*instance.numRooms) * k:
+        if time.time() - startTime > benchMark:
+            return None, 0
+        new_S = generateNeighbor(best_S, i, instance)
         i += 1
         if new_S == None:
             continue
