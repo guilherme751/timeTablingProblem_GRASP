@@ -63,6 +63,8 @@ def feasibleSolution(instance, S):
         cont = 0
         for r in range(instance.numRooms):
             if S[r][p] != None:
+                if p in S[r][p].constraints:
+                    return False
                 cont += 1
                 teachers.add(S[r][p].teacher)
                 for cur in S[r][p].curriculum:
