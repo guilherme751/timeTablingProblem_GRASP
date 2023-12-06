@@ -1,7 +1,7 @@
 from main import timeTablingInstance
 
 instances= [
-    # "toy.ctt",    
+     "toy.ctt",    
      "comp01.ctt",
     # "comp02.ctt",
     # "comp03.ctt",
@@ -29,8 +29,9 @@ print("Running instances:\n")
 for instance in instances:
     f = open("results/" + instance, "w")
     print("Instance:", instance + "...")
-    for _ in range(1):
+    for _ in range(5):
         path = "data/" + instance
         cost = timeTablingInstance(300, 0.1, path, 228)
         f.write(str(cost) + " ")
+    f.close()
 

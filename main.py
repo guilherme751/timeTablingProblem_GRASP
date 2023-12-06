@@ -60,13 +60,21 @@ def timeTablingInstance(maxItr, alpha, path, benchMark):
         
         
 
-    if best_S != None:
-        print("\nviavel: ", feasibleSolution(instance, best_S))
+    # if best_S != None:
+    #     print("\nviavel: ", feasibleSolution(instance, best_S))
 
     #outputBestSolution(instance, path, best_S)
     return best_f
 
     #print(time.time() - startTime)
+
+
+
+
+
+
+
+
 
 
 
