@@ -4,71 +4,63 @@ from src.instance import *
 from src.grasp import * 
 from src.util import *
 import time
-
-def timeTablingInstance(maxItr, alpha, path, benchMark, j):
-   
-
-
-    f_out = open("output/" + "out_"  + str(j) +  path.split("/")[1], "w")
+# f_out = open("output/" + "out_"  + str(j) +  path.split("/")[1], "w")
+# f_out.write(instance.name + "alpha = " + str(alpha) + "\n")
+# f_out.write(str(best_f) + "\n") 
+# f_out.write(str(best_f) + "\n") 
 
 
 
+
+
+def timeTablingInstance(maxItr, alpha, path, benchMark):
     instance = readInstance(path)
-    f_out.write(instance.name + "alpha = " + str(alpha) + "\n")
-
-
-
-
     startTime = time.time()
     best_f = np.inf 
     best_S = None
-    for i in range(maxItr):
+    
+    for i in range(maxItr):    
+        # salva o tempo de início da iteração, a fase construtiva irá ser interrompida caso
+        # extrapole esse tempo, retornando None 
+        startItr = time.time() 
+         
+        S = biuldInicialSolution(instance=instance, alpha=alpha, startItr= startItr, 
+                                 startTime=startTime, benchMark = benchMark)
         
-        startItr = time.time()  
-        S = biuldInicialSolution(instance=instance, alpha=alpha, startItr= startItr, startTime=startTime, benchMark = benchMark)
-        if (S == None):        
+        if (S == None):      #reinicia a instância e começa uma nova iteração
             maxItr += 1
             if time.time() - startTime > benchMark:            
                 break
             instance.resetTable()
             resetCourses(instance.courses)  
-            f_out.write(str(best_f) + "\n")      
-            continue
-        
-    
-
+            continue   
+        # busca local. Retorna a melhor solução encontrada pela busca e seu custo
         S, f_now = localSearch(S, f(S, instance), instance, startTime, benchMark)
         if S == None:                 
-            break
-        if i == 0:
+            break        
+        
+        # atualiza a melhor solução e o melhor custo    
+        if f_now < best_f:
             best_S = S
             best_f = f_now
-        else:        
-            if f_now < best_f:
-                best_S = S
-                best_f = f_now
 
-        instance.resetTable()
-        
-        f_out.write(str(best_f) + "\n") 
+        instance.resetTable()   # reinicia a instância     
     
         if time.time() - startTime > benchMark:        
-            break  
-        if i != maxItr - 1:    
-            resetCourses(instance.courses)
+            break         
 
-        
-        
-        
+    return best_f
+
+
+
+
+
+    #print(time.time() - startTime)
 
     # if best_S != None:
     #     print("\nviavel: ", feasibleSolution(instance, best_S))
 
     #outputBestSolution(instance, path, best_S)
-    return best_f,
-
-    #print(time.time() - startTime)
-
 
 
 
