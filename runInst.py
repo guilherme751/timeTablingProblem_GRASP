@@ -3,6 +3,8 @@ from main import timeTablingInstance
 instances= [
     # "toy.ctt",    
     # "comp01.ctt",
+    # "toy.ctt",    
+    # "comp01.ctt",
     # "comp02.ctt",
      "comp03.ctt",
     # "comp04.ctt",
@@ -34,4 +36,4 @@ for instance in instances:
         cost = timeTablingInstance(200, 0.1, path, 228, j)
         f.write(str(cost) + " ")
     f.close()
-
+    
