@@ -5,16 +5,16 @@ from src.grasp import *
 from src.util import *
 import time
 
-def timeTablingInstance(maxItr, alpha, path, benchMark):
+def timeTablingInstance(maxItr, alpha, path, benchMark, j):
    
 
 
-    #f_out = open("output/" + "out_" + path.split("/")[1], "w")
+    f_out = open("output/" + "out_"  + str(j) +  path.split("/")[1], "w")
 
 
 
     instance = readInstance(path)
-    #f_out.write(instance.name + "alpha = " + str(alpha) + "\n")
+    f_out.write(instance.name + "alpha = " + str(alpha) + "\n")
 
 
 
@@ -25,19 +25,20 @@ def timeTablingInstance(maxItr, alpha, path, benchMark):
     for i in range(maxItr):
         
         startItr = time.time()  
-        S = biuldInicialSolution(instance=instance, alpha=alpha, seed= 17, startItr= startItr, startTime=startTime)
+        S = biuldInicialSolution(instance=instance, alpha=alpha, startItr= startItr, startTime=startTime, benchMark = benchMark)
         if (S == None):        
             maxItr += 1
             if time.time() - startTime > benchMark:            
                 break
             instance.resetTable()
-            resetCourses(instance.courses)        
+            resetCourses(instance.courses)  
+            f_out.write(str(best_f) + "\n")      
             continue
         
     
 
-        S, f_now = localSearch(S, f(S, instance), instance, startTime)
-        if S == None:        
+        S, f_now = localSearch(S, f(S, instance), instance, startTime, benchMark)
+        if S == None:                 
             break
         if i == 0:
             best_S = S
@@ -49,7 +50,7 @@ def timeTablingInstance(maxItr, alpha, path, benchMark):
 
         instance.resetTable()
         
-        #f_out.write(str(best_f) + "\n") 
+        f_out.write(str(best_f) + "\n") 
     
         if time.time() - startTime > benchMark:        
             break  
@@ -64,7 +65,7 @@ def timeTablingInstance(maxItr, alpha, path, benchMark):
     #     print("\nviavel: ", feasibleSolution(instance, best_S))
 
     #outputBestSolution(instance, path, best_S)
-    return best_f
+    return best_f,
 
     #print(time.time() - startTime)
 
